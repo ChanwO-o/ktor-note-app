@@ -37,10 +37,10 @@ object AppModule {
 	@Provides
 	fun provideNoteDao(db: NotesDatabase) = db.noteDao()
 
-	// why don't we just create AuthInterceptor inside providesNoteApi()? The constructor doesn't even need parameters
+	// why don't we just create AuthInterceptor inside provideNoteApi()? The constructor doesn't even need parameters
 	// reason: the AuthInterceptor takes member variables(email & pw) which are assigned after login
 	// after that, we need exactly that instance of AuthInterceptor.
-	// if we create instance inside providesNoteApi(), we can't access the instance from the outside!
+	// if we create instance inside provideNoteApi(), we can't access the instance from the outside! e.g. AuthFragment needs it
 	// by creating this as a @provides function, we can inject our only instance of AuthInterceptor into our fragment later
 	@Singleton
 	@Provides

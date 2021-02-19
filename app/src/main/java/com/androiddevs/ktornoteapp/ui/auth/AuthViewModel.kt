@@ -18,9 +18,11 @@ class AuthViewModel @ViewModelInject constructor(
 	// registerStatus: can't edit outside this class
 	val registerStatus: LiveData<Resource<String>> = _registerStatus
 
+	private val _loginStatus = MutableLiveData<Resource<String>>()
+	val loginStatus: LiveData<Resource<String>> = _loginStatus
+
 	fun register(email: String, password: String, repeatedPassword: String) {
-		// emit loading status
-		_registerStatus.postValue(Resource.loading(null))
+		_registerStatus.postValue(Resource.loading(null)) // emit loading status
 
 		if (email.isEmpty() || password.isEmpty() || repeatedPassword.isEmpty()) {
 			_registerStatus.postValue(Resource.error("Please fill out all the fields", null))
@@ -31,10 +33,27 @@ class AuthViewModel @ViewModelInject constructor(
 			return
 		}
 
+		// can add more conditions here e.g. password must be > 8, contain special character, etc.
+
 		// launch coroutine inside of ViewModel scope
 		viewModelScope.launch {
 			val result = repository.register(email, password) // get result of Retrofit call
 			_registerStatus.postValue(result)
+		}
+
+	}
+
+	fun login(email: String, password: String) {
+		_loginStatus.postValue(Resource.loading(null)) // emit loading status
+
+		if (email.isEmpty() || password.isEmpty()) {
+			_loginStatus.postValue(Resource.error("Please fill out all the fields", null))
+			return
+		}
+
+		viewModelScope.launch { // launch coroutine inside of ViewModel scope
+			val result = repository.login(email, password) // get result of Retrofit call
+			_loginStatus.postValue(result)
 		}
 
 	}

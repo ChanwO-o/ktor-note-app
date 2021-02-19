@@ -8,8 +8,8 @@ import okhttp3.Response
 // interceptor: tells Retrofit to modify every outgoing request slightly in some way
 class BasicAuthInterceptor : Interceptor {
 
-	val email: String? = null
-	val password: String? = null
+	var email: String? = null
+	var password: String? = null
 
 	// chain: collection of several interceptors to the http client. each will change our request
 	// each interceptor will return a Response, either for the next interceptor in the chain, or our ktor server
